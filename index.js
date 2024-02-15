@@ -25,6 +25,16 @@ let persons = [
   },
 ];
 
+const generateId = () => {
+  let id = Math.ceil(Math.random() * 1000);
+  while (persons.map((p) => p.id).includes(id)) {
+    id = Math.ceil(Math.random() * 1000);
+  }
+  return id;
+};
+
+app.use(express.json());
+
 app.get("/info", (request, response) => {
   response.send(
     `
@@ -54,6 +64,23 @@ app.delete("/api/persons/:id", (request, response) => {
   const id = Number(request.params.id);
   persons = persons.filter((person) => person.id !== id);
   response.status(204).end();
+});
+
+app.post("/api/persons", (request, response) => {
+  const body = request.body;
+
+  // if (!body.name || !body.number) {
+  //   response.status()
+  //   return;
+  // }
+
+  const person = {
+    id: generateId(),
+    name: body.name,
+    number: body.number,
+  };
+
+  response.json(person);
 });
 
 app.listen(3001, () => {
