@@ -69,10 +69,18 @@ app.delete("/api/persons/:id", (request, response) => {
 app.post("/api/persons", (request, response) => {
   const body = request.body;
 
-  // if (!body.name || !body.number) {
-  //   response.status()
-  //   return;
-  // }
+  if (!body.name || !body.number) {
+    // users can't set number as '0' though
+    response.status(400);
+    response.json({ error: "missing name or number" });
+    return;
+  }
+
+  if (persons.map((p) => p.name).includes(body.name)) {
+    response.status(400);
+    response.json({ error: "names must be unique" });
+    return;
+  }
 
   const person = {
     id: generateId(),
@@ -80,6 +88,7 @@ app.post("/api/persons", (request, response) => {
     number: body.number,
   };
 
+  persons = persons.concat(person);
   response.json(person);
 });
 
