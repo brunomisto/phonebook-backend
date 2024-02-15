@@ -1,6 +1,16 @@
 const express = require("express");
+const morgan = require("morgan");
 
 const app = express();
+
+morgan.token("reqbody", (req, res) => {
+  return JSON.stringify(req.body);
+});
+app.use(
+  morgan(
+    ":method :url :status :res[content-length] - :response-time ms :reqbody"
+  )
+);
 
 let persons = [
   {
@@ -45,6 +55,7 @@ app.get("/info", (request, response) => {
 });
 
 app.get("/api/persons", (request, response) => {
+  console.log(request.body);
   response.json(persons).end();
 });
 
