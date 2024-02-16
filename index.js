@@ -1,5 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
+const cors = require("cors");
 
 const app = express();
 
@@ -11,6 +12,8 @@ app.use(
     ":method :url :status :res[content-length] - :response-time ms :reqbody"
   )
 );
+
+app.use(cors());
 
 let persons = [
   {
@@ -55,7 +58,6 @@ app.get("/info", (request, response) => {
 });
 
 app.get("/api/persons", (request, response) => {
-  console.log(request.body);
   response.json(persons).end();
 });
 
