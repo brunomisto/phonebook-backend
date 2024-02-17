@@ -12,7 +12,7 @@ if (
 }
 
 const password = process.argv[2];
-const uri = `mongodb+srv://bruno:${password}@cluster0.o5gkghs.mongodb.net/?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://bruno:${password}@cluster0.o5gkghs.mongodb.net/phonebookApp?retryWrites=true&w=majority`;
 
 mongoose.connect(uri);
 
