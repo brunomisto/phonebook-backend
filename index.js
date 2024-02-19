@@ -48,31 +48,25 @@ app.get("/api/persons/:id", (request, response) => {
 //   response.status(204).end();
 // });
 
-// app.post("/api/persons", (request, response) => {
-//   const body = request.body;
+app.post("/api/persons", (request, response) => {
+  const body = request.body;
 
-//   if (!body.name || !body.number) {
-//     // users can't set number as '0' though
-//     response.status(400);
-//     response.json({ error: "missing name or number" });
-//     return;
-//   }
+  if (!body.name || !body.number) {
+    // users can't set number as '0' though
+    response.status(400);
+    response.json({ error: "missing name or number" });
+    return;
+  }
 
-//   if (persons.map((p) => p.name).includes(body.name)) {
-//     response.status(400);
-//     response.json({ error: "names must be unique" });
-//     return;
-//   }
+  const person = new Person({
+    name: body.name,
+    number: body.number,
+  });
 
-//   const person = {
-//     id: generateId(),
-//     name: body.name,
-//     number: body.number,
-//   };
-
-//   persons = persons.concat(person);
-//   response.json(person);
-// });
+  person.save().then((person) => {
+    response.json(person);
+  });
+});
 
 app.listen(3001, () => {
   console.log("listening in http://localhost:3001");
