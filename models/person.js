@@ -11,6 +11,14 @@ const personSchema = new mongoose.Schema({
   number: String,
 });
 
+personSchema.set("toJSON", {
+  transform: (doc, ret) => {
+    ret.id = String(ret._id);
+    delete ret._id;
+    delete ret.__v;
+  },
+});
+
 // Person factory
 const Person = mongoose.model("Person", personSchema);
 
