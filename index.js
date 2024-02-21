@@ -71,6 +71,20 @@ app.post("/api/persons", (request, response) => {
   });
 });
 
+app.put("/api/persons/:id", (request, response, next) => {
+  const id = request.params.id;
+  const updatedPerson = {
+    name: request.body.name,
+    number: request.body.number,
+  };
+
+  Person.findByIdAndUpdate(id, updatedPerson, { new: true })
+    .then((person) => {
+      response.json(person);
+    })
+    .catch((error) => next(error));
+});
+
 app.use((error, request, response, next) => {
   if (error.name === "CastError") {
     response.status(400);
