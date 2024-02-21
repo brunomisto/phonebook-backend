@@ -38,16 +38,18 @@ app.get("/api/persons", (request, response) => {
 app.get("/api/persons/:id", (request, response) => {
   const id = request.params.id;
   Person.findById(id).then((person) => {
-    console.log(person);
     response.send(person);
   });
 });
 
-// app.delete("/api/persons/:id", (request, response) => {
-//   const id = Number(request.params.id);
-//   persons = persons.filter((person) => person.id !== id);
-//   response.status(204).end();
-// });
+app.delete("/api/persons/:id", (request, response, next) => {
+  const id = request.params.id;
+  Person.findByIdAndDelete(id)
+    .then((person) => {
+      response.status(204).end();
+    })
+    .catch((error) => next(error));
+});
 
 app.post("/api/persons", (request, response) => {
   const body = request.body;
@@ -67,6 +69,16 @@ app.post("/api/persons", (request, response) => {
   person.save().then((person) => {
     response.json(person);
   });
+});
+
+app.use((error, request, response, next) => {
+  if (error.name === "CastError") {
+    response.status(400);
+    response.json({ error: "malformatted id" });
+    return;
+  }
+
+  next(error);
 });
 
 app.listen(3001, () => {
